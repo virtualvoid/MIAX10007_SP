@@ -1,0 +1,76 @@
+<UserControl x:Class="DigitApp.Views.EvaluationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="12">
+            <DockPanel>
+                <Button DockPanel.Dock="Left" Content="Vyhodnotiť modely na testovacej množine"
+                        Padding="12,5" Command="{Binding RunCommand}"/>
+                <TextBlock Text="{Binding Status}" VerticalAlignment="Center" Margin="12,0,0,0"/>
+            </DockPanel>
+            <ProgressBar IsIndeterminate="{Binding IsRunning}" Height="4" Margin="0,8,0,12"/>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="24"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Porovnanie modelov" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <DataGrid ItemsSource="{Binding ModelRows}" AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                              BorderThickness="0" Background="Transparent" RowBackground="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Model" Binding="{Binding Model}" Width="70"/>
+                            <DataGridTextColumn Header="Presnosť" Binding="{Binding Accuracy}" Width="*"/>
+                            <DataGridTextColumn Header="Strata" Binding="{Binding Loss}" Width="*"/>
+                            <DataGridTextColumn Header="Chybných predikcií" Binding="{Binding Errors}" Width="1.5*"/>
+                            <DataGridTextColumn Header="Parametrov" Binding="{Binding Parameters}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <TextBlock Text="Fuzzy hodnotenie spoľahlivosti" FontSize="16" FontWeight="SemiBold" Margin="0,24,0,6"/>
+                    <TextBlock TextWrapping="Wrap" Foreground="Gray" Margin="0,0,0,6"
+                               Text="Rozdelenie testovacích obrázkov podľa spoľahlivosti, ktorú vypočítal fuzzy systém, a presnosť hlavného modelu v každej skupine."/>
+                    <DataGrid ItemsSource="{Binding FuzzyRows}" AutoGenerateColumns="False" IsReadOnly="True"
+                              CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal"
+                              BorderThickness="0" Background="Transparent" RowBackground="Transparent">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Spoľahlivosť" Binding="{Binding Level}" Width="*"/>
+                            <DataGridTextColumn Header="Počet obrázkov" Binding="{Binding Count}" Width="*"/>
+                            <DataGridTextColumn Header="Podiel" Binding="{Binding Share}" Width="*"/>
+                            <DataGridTextColumn Header="Presnosť modelu" Binding="{Binding Accuracy}" Width="*"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                    <TextBlock Text="{Binding FuzzySummary}" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Confusion matrix" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,6"/>
+                    <ComboBox ItemsSource="{Binding ConfusionChoices}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                              SelectedValue="{Binding SelectedConfusionModel}" Width="120" HorizontalAlignment="Left"/>
+                    <TextBlock Text="riadky = skutočná číslica, stĺpce = predikcia" Foreground="Gray" FontSize="11"
+                               Margin="0,6,0,6"/>
+                    <ItemsControl ItemsSource="{Binding ConfusionCells}" Width="462">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <UniformGrid Columns="11"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="{Binding Background}" Height="32" BorderBrush="#22000000" BorderThickness="0.5">
+                                    <TextBlock Text="{Binding Text}" FontWeight="{Binding Weight}"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

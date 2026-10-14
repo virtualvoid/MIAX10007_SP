@@ -1,0 +1,73 @@
+# --- projektové výnimky ---
+# dokumentácia a výsledky experimentov, dataset a nastavenia IDE sa do repozitára nedávajú
+docs/
+mnist_dataset/
+.idea/
+.vs/
+
+# --- build výstupy ---
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+publish/
+*.dll
+*.exe
+*.pdb
+*.nupkg
+*.snupkg
+
+# --- používateľské nastavenia a dočasné súbory ---
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+*.vsidx
+*.DotSettings.user
+.vscode/
+*.swp
+*~
+*.tmp
+*.log
+~$*
+Thumbs.db
+.DS_Store
+
+# --- testy a pokrytie kódu ---
+TestResults/
+[Tt]est[Rr]esult*/
+*.trx
+*.coverage
+*.coveragexml
+coverage*.json
+coverage*.xml
+coverage*.info
+*.cobertura.xml
+[Cc]overage[Rr]eport/
+
+# --- NuGet ---
+*.nuget.props
+*.nuget.targets
+project.lock.json
+project.fragment.lock.json
+packages/
+!**/[Pp]ackages/build/
+
+# --- WPF / MSBuild dočasné súbory ---
+*_wpftmp.csproj
+*.g.cs
+*.g.i.cs
+*.binlog
+*.msbuildlog
+
+# --- ReSharper / Rider ---
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.dotCover
+.idea_modules/

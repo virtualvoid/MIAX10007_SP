@@ -1,0 +1,91 @@
+<UserControl x:Class="DigitApp.Views.TrainingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="clr-namespace:DigitApp.Controls">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid Margin="12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="330"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- nastavenie trénovania -->
+            <StackPanel Grid.Column="0">
+                <TextBlock Text="Nastavenie trénovania" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                <Grid IsEnabled="{Binding IsIdle}">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Row="0" Text="Model" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <ComboBox Grid.Row="0" Grid.Column="1" Margin="0,0,0,8"
+                              ItemsSource="{Binding ModelChoices}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                              SelectedValue="{Binding SelectedModel}"/>
+
+                    <TextBlock Grid.Row="1" Text="Optimalizátor" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <ComboBox Grid.Row="1" Grid.Column="1" Margin="0,0,0,8"
+                              ItemsSource="{Binding OptimizerChoices}" DisplayMemberPath="Label" SelectedValuePath="Value"
+                              SelectedValue="{Binding SelectedOptimizer}"/>
+
+                    <TextBlock Grid.Row="2" Text="Počet epoch" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBox Grid.Row="2" Grid.Column="1" Margin="0,0,0,8" Text="{Binding Epochs, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="3" Text="Veľkosť dávky" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBox Grid.Row="3" Grid.Column="1" Margin="0,0,0,8" Text="{Binding BatchSize, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="4" Text="Learning rate" VerticalAlignment="Center" Margin="0,0,0,8"/>
+                    <TextBox Grid.Row="4" Grid.Column="1" Margin="0,0,0,8" Text="{Binding LearningRate, UpdateSourceTrigger=PropertyChanged}"/>
+
+                    <TextBlock Grid.Row="5" Text="Dataset MNIST" VerticalAlignment="Center"/>
+                    <DockPanel Grid.Row="5" Grid.Column="1">
+                        <Button DockPanel.Dock="Right" Content="…" Width="28" Margin="4,0,0,0" Click="Browse_Click"/>
+                        <TextBox Text="{Binding DatasetDirectory, UpdateSourceTrigger=LostFocus}"/>
+                    </DockPanel>
+                </Grid>
+
+                <StackPanel Orientation="Horizontal" Margin="0,16,0,0">
+                    <Button Content="Spustiť trénovanie" Padding="12,5" Command="{Binding StartCommand}"/>
+                    <Button Content="Zastaviť" Padding="12,5" Margin="8,0,0,0" Command="{Binding StopCommand}"/>
+                </StackPanel>
+
+                <ProgressBar Minimum="0" Maximum="100" Value="{Binding ProgressPercent, Mode=OneWay}" Height="12" Margin="0,14,0,0"/>
+                <TextBlock Text="{Binding Status}" TextWrapping="Wrap" Margin="0,8,0,0"/>
+
+                <TextBlock TextWrapping="Wrap" Foreground="Gray" FontSize="11" Margin="0,14,0,0"
+                           Text="Trénuje sa nová sieť od nuly. Po dokončení sa uloží do profilu používateľa a použije sa v záložke Rozpoznávanie. Zastavené trénovanie sa neukladá."/>
+                <Button Content="Obnoviť pôvodné modely" Padding="8,4" Margin="0,10,0,0" HorizontalAlignment="Left"
+                        Command="{Binding ResetModelsCommand}"/>
+            </StackPanel>
+
+            <!-- priebeh -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <UniformGrid Rows="1" Height="250">
+                    <controls:LineChart Title="Presnosť (%)" Series="{Binding AccuracySeries}"
+                                        ExpectedPoints="{Binding ExpectedEpochs}" ValueFormat="0.0" Margin="0,0,8,0"/>
+                    <controls:LineChart Title="Strata (cross-entropy)" Series="{Binding LossSeries}"
+                                        ExpectedPoints="{Binding ExpectedEpochs}" ValueFormat="0.000" Margin="8,0,0,0"/>
+                </UniformGrid>
+
+                <ListBox Grid.Row="1" Margin="0,12,0,0" MinHeight="220" ItemsSource="{Binding Log}"
+                         FontFamily="Consolas" FontSize="12"/>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>
